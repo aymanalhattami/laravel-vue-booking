@@ -5,10 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Laravel</title>
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     </head>
     <body>
-        <div class="app">
-            
+        <div id="app">
+            <index></index>
         </div>
+
+        <script src="{{ asset('js/app.js') }}" defer></script>
     </body>
 </html>
