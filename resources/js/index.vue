@@ -8,9 +8,9 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
+                    <!-- <li class="nav-item active">
                         <router-link class="nav-link" :to="{name: 'example'}">Second</router-link>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </nav>
