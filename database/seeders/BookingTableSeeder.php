@@ -16,7 +16,7 @@ class BookingTableSeeder extends Seeder
     public function run()
     {
         Bookable::all()->each(function($bookable){
-            $booking = factory(Booking::class)->make();
+            $booking = Booking::factory()->make();
             $bookings = collect([$booking]);
 
             for($i = 0; $i < random_int(1, 20); $i++){
@@ -25,7 +25,8 @@ class BookingTableSeeder extends Seeder
 
                 $booking = Booking::create([
                     'from' => $from,
-                    'to' => $to
+                    'to' => $to,
+                    'bookable_id' => Bookable::inRandomOrder()->first()->id
                 ]);
 
                 $bookings->push($booking);

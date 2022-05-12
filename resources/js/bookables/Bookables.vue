@@ -6,11 +6,11 @@
                 <div class="col d-flex align-items-stretch" v-for="(bookable, column) in bookablesInRow(row)" :key="'row' + row + column">
                     <!-- <bookable-list-item
                         :id="bookable.id"
-                        :title="bookable.title" 
+                        :title="bookable.title"
                         :description="bookable.description"
                         ></bookable-list-item>   -->
                     <bookable-list-item
-                        v-bind="bookable"></bookable-list-item>  
+                        v-bind="bookable"></bookable-list-item>
                 </div>
 
                 <div class="col" v-for="p in placeholdersInRow(row)" :key="'placeholder' + row + p"></div>
@@ -34,8 +34,8 @@ export default {
     },
     computed:{
         rows(){
-            return this.bookables === null 
-                ? 0 
+            return this.bookables === null
+                ? 0
                 : Math.ceil(this.bookables.length / this.columns);
         }
     },
