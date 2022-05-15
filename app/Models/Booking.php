@@ -15,4 +15,18 @@ class Booking extends Model
     {
         return $this->belongsTo(Booking::class);
     }
+
+    /**
+     * check for dates overlaps
+     *
+     * @param Builder $query
+     * @param date $from
+     * @param date $to
+     *
+     * @return void
+     */
+    public function scopeBetweenDates($query, $from, $to)
+    {
+        $query->where('to', '>=', $from)->where('from', '<=', $to);
+    }
 }

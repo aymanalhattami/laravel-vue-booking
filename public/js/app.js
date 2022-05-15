@@ -5265,16 +5265,63 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       from: null,
-      to: null
+      to: null,
+      loading: false,
+      errors: null,
+      status: null
     };
   },
   methods: {
     check: function check() {
-      alert('here');
+      var _this = this;
+
+      this.loading = true;
+      this.errors = null;
+      axios.get("/api/bookables/".concat(this.$route.params.id, "/availability?from=").concat(this.from, "&to=").concat(this.to)).then(function (response) {
+        _this.status == response.status;
+      })["catch"](function (error) {
+        /** 422 for validation error */
+        if (422 === error.response.status) _this.errors = error.response.data.errors;
+        _this.status = error.response.status;
+      }).then(function () {
+        _this.loading = false;
+      });
+    },
+    errorFor: function errorFor(field) {
+      return this.hasErrors && this.errors[field] ? this.errors[field] : null;
+    }
+  },
+  computed: {
+    hasErrors: function hasErrors() {
+      return 422 === this.status && this.errors !== null;
+    },
+    hasAvailability: function hasAvailability() {
+      return 200 === this.status;
+    },
+    noAvailability: function noAvailability() {
+      return 404 === this.status;
     }
   }
 });
@@ -28783,84 +28830,131 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c(
+      "h6",
+      { staticClass: "text-uppercase text-secondary font-weight-bold" },
+      [
+        _c("span", [_vm._v("Check Availability")]),
+        _vm._v(" "),
+        _vm.noAvailability
+          ? _c("span", { staticClass: "text-danger" }, [
+              _vm._v("(NOT AVAILABILE)"),
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.hasAvailability
+          ? _c("span", { staticClass: "text-success" }, [
+              _vm._v("(AVAILABILE)"),
+            ])
+          : _vm._e(),
+      ]
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "from" } }, [_vm._v("From")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.from,
-              expression: "from",
+      _c(
+        "div",
+        { staticClass: "form-group col-md-12" },
+        [
+          _c("label", { attrs: { for: "from" } }, [_vm._v("From")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.from,
+                expression: "from",
+              },
+            ],
+            staticClass: "form-control from-control-sm",
+            class: [{ "is-invalid": this.errorFor("from") }],
+            attrs: { type: "date" },
+            domProps: { value: _vm.from },
+            on: {
+              keyup: function ($event) {
+                if (
+                  !$event.type.indexOf("key") &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.check.apply(null, arguments)
+              },
+              input: function ($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.from = $event.target.value
+              },
             },
-          ],
-          staticClass: "form-control from-control-sm",
-          attrs: { type: "text" },
-          domProps: { value: _vm.from },
-          on: {
-            keyup: function ($event) {
-              if (
-                !$event.type.indexOf("key") &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return _vm.check.apply(null, arguments)
-            },
-            input: function ($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.from = $event.target.value
-            },
-          },
-        }),
-      ]),
+          }),
+          _vm._v(" "),
+          _vm._l(this.errorFor("from"), function (error, index) {
+            return _c(
+              "div",
+              { key: "from" + index, staticClass: "invalid-feedback" },
+              [_vm._v("\n                " + _vm._s(error) + "\n            ")]
+            )
+          }),
+        ],
+        2
+      ),
       _vm._v(" "),
-      _c("div", { staticClass: "form-group col-md-6" }, [
-        _c("label", { attrs: { for: "to" } }, [_vm._v("To")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.to,
-              expression: "to",
+      _c(
+        "div",
+        { staticClass: "form-group col-md-12 mt-4" },
+        [
+          _c("label", { attrs: { for: "to" } }, [_vm._v("To")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.to,
+                expression: "to",
+              },
+            ],
+            staticClass: "form-control from-control-sm",
+            class: [{ "is-invalid": this.errorFor("to") }],
+            attrs: { type: "date" },
+            domProps: { value: _vm.to },
+            on: {
+              keyup: function ($event) {
+                if (
+                  !$event.type.indexOf("key") &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return _vm.check.apply(null, arguments)
+              },
+              input: function ($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.to = $event.target.value
+              },
             },
-          ],
-          staticClass: "form-control from-control-sm",
-          attrs: { type: "text" },
-          domProps: { value: _vm.to },
-          on: {
-            keyup: function ($event) {
-              if (
-                !$event.type.indexOf("key") &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return _vm.check.apply(null, arguments)
-            },
-            input: function ($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.to = $event.target.value
-            },
-          },
-        }),
-      ]),
+          }),
+          _vm._v(" "),
+          _vm._l(this.errorFor("to"), function (error, index) {
+            return _c(
+              "div",
+              { key: "to" + index, staticClass: "invalid-feedback" },
+              [_vm._v("\n                " + _vm._s(error) + "\n            ")]
+            )
+          }),
+        ],
+        2
+      ),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-12 mt-3" }, [
         _c(
           "button",
           {
             staticClass: "btn btn-secondary btn-block w-100",
+            attrs: { disabled: _vm.loading },
             on: { click: _vm.check },
           },
           [_vm._v("Check")]
@@ -28869,18 +28963,7 @@ var render = function () {
     ]),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "h6",
-      { staticClass: "text-uppercase text-secondary font-weight-bold" },
-      [_c("span", [_vm._v("Check Availability")])]
-    )
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
