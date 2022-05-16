@@ -16,6 +16,11 @@ class Booking extends Model
         return $this->belongsTo(Booking::class);
     }
 
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
+
     /**
      * check for dates overlaps
      *

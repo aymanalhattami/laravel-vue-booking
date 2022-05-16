@@ -5,6 +5,7 @@ use App\Models\Bookable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BookableController;
+use App\Http\Controllers\Api\BookableReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::get('bookables', [BookableController::class, 'index']);
 // Route::get('bookables/{id}', [BookableController::class, 'show']);
 Route::apiResource('bookables', BookableController::class);
-Route::get('bookables/{bookable}/availability', BookableAvailabilityController::class);
+Route::get('bookables/{bookable}/availability', BookableAvailabilityController::class)->name('bookables.availability.show');
+Route::get('bookables/{bookable}/reviews', BookableReviewController::class)->name('bookables.reviews.show');
