@@ -15,11 +15,12 @@
                     <div class="col-md-6">Ayman Mohammed</div>
                     <div class="col-md-6 d-flex justify-content-end">
                         {{ review.rating }}
+                        <star-rating></star-rating>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        {{ review.created_at }}
+                        {{ review.created_at | fromNow }}
                     </div>
                 </div>
                 <div class="row py-2">
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 export default {
     props: {
         bookableId: String,
@@ -43,6 +45,12 @@ export default {
             loading: false,
             reviews: null,
         };
+    },
+
+    filters:{
+        fromNow(value){
+            return moment(value).fromNow();
+        }
     },
 
     created() {
