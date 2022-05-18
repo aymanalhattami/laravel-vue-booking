@@ -5611,13 +5611,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     halfStar: function halfStar() {
-      return false;
+      var fraction = Math.round((this.rating - Math.floor(this.rating)) * 100);
+      return fraction > 0 && fraction < 50;
     },
     fullStars: function fullStars() {
-      return 4;
+      return Math.round(this.rating);
     },
     emptyStar: function emptyStar() {
-      return 1;
+      return 5 - Math.ceil(this.rating);
     }
   }
 });
@@ -50939,14 +50940,7 @@ var render = function () {
                   _c(
                     "div",
                     { staticClass: "col-md-6 d-flex justify-content-end" },
-                    [
-                      _vm._v(
-                        "\n                    " +
-                          _vm._s(review.rating) +
-                          "\n                    "
-                      ),
-                      _c("star-rating"),
-                    ],
+                    [_c("star-rating", { attrs: { rating: review.rating } })],
                     1
                   ),
                 ]),
