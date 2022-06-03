@@ -15,7 +15,7 @@
                     <div class="col-md-6">Ayman Mohammed</div>
                     <div class="col-md-6 d-flex justify-content-end">
                         <!-- {{ review.rating }} -->
-                        <star-rating :rating="review.rating "></star-rating>
+                        <star-rating :value="review.rating "></star-rating>
                     </div>
                 </div>
                 <div class="row">

@@ -14,9 +14,7 @@
                     v-model="from" 
                     class="form-control from-control-sm"
                     :class="[{'is-invalid': this.errorFor('from')}]">
-                <div class="invalid-feedback" v-for="(error, index) in this.errorFor('from')" :key="'from' + index">
-                    {{ error }}
-                </div>
+                <v-error :errors="errorFor('from')"></v-error>
             </div>
             <div class="form-group col-md-12 mt-4">
                 <label for="to">To</label>
@@ -26,9 +24,7 @@
                     v-model="to" 
                     class="form-control from-control-sm"
                     :class="[{'is-invalid' : this.errorFor('to')}]">
-                <div class="invalid-feedback" v-for="(error, index) in this.errorFor('to')" :key="'to' + index">
-                    {{ error }}
-                </div>
+                <v-error :errors="errorFor('to')"></v-error>
             </div>
 
             <div class="col-md-12 mt-3">
@@ -39,7 +35,11 @@
 </template>
 
 <script>
+import { is422 } from "./../shared/utils/response";
+import validationErrors from "../shared/mixins/validationErrors";
+
 export default {
+    mixins: [validationErrors],
     props:{
         bookableId: String
     },
@@ -49,7 +49,6 @@ export default {
             from: null,
             to: null,
             loading: false,
-            errors: null,
             status: null
         }
     },
@@ -65,7 +64,7 @@ export default {
                 })
                 .catch(error => {
                     /** 422 for validation error */
-                    if(422 === error.response.status)
+                    if(is422(error))
                         this.errors = error.response.data.errors;
 
                     this.status = error.response.status;
@@ -74,10 +73,6 @@ export default {
                     this.loading = false;
                 })
         },
-
-        errorFor(field){
-            return this.hasErrors && this.errors[field] ? this.errors[field] : null;
-        }
     },
     computed:{
         hasErrors(){
