@@ -46,8 +46,8 @@ export default {
 
     data(){
         return {
-            from: null,
-            to: null,
+            from: this.$store.state.lastSearch.from || null,
+            to: this.$store.state.lastSearch.to || null,
             loading: false,
             status: null
         }
@@ -58,9 +58,14 @@ export default {
             this.loading = true;
             this.errors = null;
 
+            this.$store.dispatch("setLastSearch", {
+                from: this.from,
+                to: this.to
+            });
+
             axios.get(`/api/bookables/${this.bookableId}/availability?from=${this.from}&to=${this.to}`)
                 .then(response => {
-                    this.status == response.status;
+                    this.status = response.status;
                 })
                 .catch(error => {
                     /** 422 for validation error */
@@ -71,7 +76,7 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                })
+                });
         },
     },
     computed:{
