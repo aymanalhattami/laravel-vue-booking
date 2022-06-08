@@ -1,12 +1,10 @@
 <?php
 
-namespace Database\Seeders;
-
 use App\Models\Bookable;
 use App\Models\Booking;
 use Illuminate\Database\Seeder;
 
-class BookingTableSeeder extends Seeder
+class BookingsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +13,7 @@ class BookingTableSeeder extends Seeder
      */
     public function run()
     {
-        Bookable::all()->each(function($bookable){
+        Bookable::all()->each(function(Bookable $bookable){
             $booking = Booking::factory()->make();
             $bookings = collect([$booking]);
 
@@ -23,12 +21,11 @@ class BookingTableSeeder extends Seeder
                 $from = (clone $booking->to)->addDays(random_int(1, 14));
                 $to = (clone $from)->addDays(random_int(0, 14));
 
-                $booking = Booking::create([
+                $booking = Booking::make([
                     'from' => $from,
                     'to' => $to,
-                    'bookable_id' => Bookable::inRandomOrder()->first()->id
+                    'price' => random_int(200, 5000)
                 ]);
-
                 $bookings->push($booking);
             }
 

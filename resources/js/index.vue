@@ -1,40 +1,65 @@
 <template>
     <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white px-2">
-            <router-link class="navbar-brand" :to="{name: 'home'}">Home</router-link>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <nav class="navbar navbar-expand-lg bg-white border-bottom navbar-light">
+            <router-link class="navbar-brand mr-auto" :to="{name: 'home'}">LaravelBnb</router-link>
 
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <!-- <li class="nav-item active">
-                        <router-link class="nav-link" :to="{name: 'example'}">Second</router-link>
-                    </li> -->
-                </ul>
-            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <router-link class="nav-link" :to="{name: 'basket'}">
+                            Basket
+                        <span v-if="itemsInBasket" class="badge badge-secondary">{{itemsInBasket}}</span>
+                    </router-link>
+                </li>
+                <li class="nav-item" v-if="!isLoggedIn">
+                    <router-link class="nav-link" :to="{name: 'register'}">
+                        Register
+                    </router-link>
+                </li>
+                <li class="nav-item" v-if="!isLoggedIn">
+                    <router-link class="nav-link" :to="{name: 'login'}">
+                        Sign-in
+                    </router-link>
+                </li>
+                <li class="nav-item" v-if="isLoggedIn">
+                    <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
+                </li>
+            </ul>
         </nav>
-
-        <div class="container mt-4">
+        <div class="container mt-4 mb-4 pr-4 pl-4">
             <router-view></router-view>
         </div>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from "vuex";
+import { logOut } from './shared/utils/auth';
 
 export default {
-    data() {
-        return {
+    data(){
+        return{
             lastSearch: this.$store.state.lastSearch
-        };
+        }
     },
-
     computed: {
         ...mapState({
-            lastSearchComputed: "lastSearch"
+            lastSearchcomputed: "lastSearch",
+            isLoggedIn: "isLoggedIn"
         }),
+        ...mapGetters({
+            itemsInBasket: "itemsInBasket"
+        })
     },
+    methods:{
+        async logout(){
+            try{
+                axios.post("/logout");
+                this.$store.dispatch("logout");
+            }
+            catch(err){
+                this.$store.dispatch("logout");
+            }
+        }
+    }
 }
 </script>

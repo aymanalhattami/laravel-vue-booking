@@ -1,37 +1,52 @@
 require('./bootstrap');
-import router from "./routes";
-import VueRouter from 'vue-router'
-// import Vue from "vue";
-import Index from './index';
-import Vue from "vue";
+
+import moment from "moment";
+import VueRouter from "vue-router";
 import Vuex from 'vuex';
-import storeDefinition from './store';
-// import starRating from './shared/components/StarRating.vue';
+import Index from "./Index";
+import router from "./routes";
+import FatalError from "./shared/components/FatalError";
+import StarRating from "./shared/components/StarRating";
+import Success from "./shared/components/Success";
+import ValidationErrors from "./shared/components/ValidationErrors";
+import storeDefinition from "./store";
 
+window.Vue = require('vue');
 
-window.Vue = require('vue').default;
 Vue.use(VueRouter);
 Vue.use(Vuex);
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+Vue.filter("fromNow", value => moment(value).fromNow());
 
-Vue.component('star-rating', require('./shared/components/StarRating.vue').default);
-Vue.component('fatal-error', require('./shared/components/FatalError.vue').default);
-Vue.component('v-error', require('./shared/components/ValidationErrors.vue').default);
-Vue.component('success', require('./shared/components/Success.vue').default);
+Vue.component("star-rating", StarRating);
+Vue.component("fatal-error", FatalError);
+Vue.component("success", Success);
+Vue.component("v-errors", ValidationErrors);
 
 const store = new Vuex.Store(storeDefinition);
 
-const app = new Vue({
-    el: '#app',
-    store,
-    router,
-    components:{
-        'index': Index
+window.axios.interceptors.response.use(
+    response => {
+        return response
     },
+    error => {
+        if(error.response.status == 401){
+            store.dispatch("logout")
+        }
 
-    beforeCreate(){
-        this.$store.dispatch("loadStoredState");
+        return Promise.reject(error);
     }
+)
+
+const app = new Vue({
+    el: "#app",
+    router,
+    store,
+    components: {
+        index: Index
+    },
+    async beforeCreate() {
+        this.$store.dispatch("loadStoredState");
+        this.$store.dispatch("loadUser");
+    },
 });

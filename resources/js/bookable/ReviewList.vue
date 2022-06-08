@@ -1,21 +1,13 @@
 <template>
-    <div class="d-none d-md-block">
-        <h6 class="text-uppercase text-secondary font-weight-bolder">
-            Reivew List
-        </h6>
-
-        <div v-if="loading">loading ...</div>
+    <div>
+        <h6 class="text-uppercase text-secondary font-weight-bolder pt-4">Review List</h6>
+        <div v-if="loading">Loading ...</div>
         <div v-else>
-            <div
-                class="border-bottom bg-white p-3 mb-2"
-                v-for="(review, index) in reviews"
-                :key="index"
-            >
-                <div class="row pt-2">
-                    <div class="col-md-6">Ayman Mohammed</div>
+            <div class="border-bottom d-none d-md-block" v-for="(review, index) in reviews" :key="index">
+                <div class="row pt-4">
+                    <div class="col-md-6">Neil Saenz</div>
                     <div class="col-md-6 d-flex justify-content-end">
-                        <!-- {{ review.rating }} -->
-                        <star-rating :value="review.rating "></star-rating>
+                        <star-rating :value="review.rating" class="fa-lg"></star-rating>
                     </div>
                 </div>
                 <div class="row">
@@ -23,9 +15,9 @@
                         {{ review.created_at | fromNow }}
                     </div>
                 </div>
-                <div class="row py-2">
-                    <div class="col-md-12">
-                        {{ review.content }}
+                <div class="row pt-4 pb-4">
+                    <div class="col-12">
+                       {{ review.content }}
                     </div>
                 </div>
             </div>
@@ -34,31 +26,29 @@
 </template>
 
 <script>
-import moment from 'moment';
+//import moment from "moment";
 export default {
-    props: {
-        bookableId: [String, Number],
+    props:{
+        bookableId: [String, Number]
     },
-
-    data() {
+    data(){
         return {
             loading: false,
-            reviews: null,
-        };
-    },
-
-    filters:{
-        fromNow(value){
-            return moment(value).fromNow();
+            reviews: null
         }
     },
-
-    created() {
+    created(){
         this.loading = true;
-        axios
-            .get(`/api/bookables/${this.bookableId}/reviews`)
-            .then((response) => (this.reviews = response.data))
-            .then(() => this.loading = false);
+        axios.get(`/api/bookables/${this.bookableId}/reviews`)
+            .then(response => (this.reviews = response.data.data))
+            .then(()=>(this.loading = false));
     },
-};
+    /*  CREATED GLOBAL IN APP.JS
+    filters:{
+        fromNow(value){
+            return moment(value).fromNow()
+        }
+    }
+    */
+}
 </script>

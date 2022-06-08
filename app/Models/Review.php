@@ -9,17 +9,9 @@ class Review extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'content', 'rating'];
-
-    public function getIncrementing()
-    {
-        return false;
-    }
-
-    public function getKeyType()
-    {
-        return'string';
-    }
+    protected $fillable = [
+        'id', 'content', 'rating'
+    ];
 
     public function bookable()
     {
@@ -29,5 +21,14 @@ class Review extends Model
     public function booking()
     {
         return $this->belongsTo(Booking::class);
+    }
+
+    public function getIncrementing()
+    {
+        return false;
+    }
+
+    public function getKeyType(){
+        return 'string';
     }
 }

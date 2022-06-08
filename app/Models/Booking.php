@@ -2,27 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Booking extends Model
 {
     use HasFactory;
+    protected $fillable = ['from', 'to', 'price'];
 
-    protected $fillable = ['from', 'to', 'bookable_id'];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function($booking){
-            $booking->review_key = Str::uuid();
-        });
-    }
-
-    public function bookable()
-    {
+    public function bookable(){
         return $this->belongsTo(Bookable::class);
     }
 
@@ -31,22 +21,28 @@ class Booking extends Model
         return $this->hasOne(Review::class);
     }
 
-    /**
-     * check for dates overlaps
-     *
-     * @param Builder $query
-     * @param date $from
-     * @param date $to
-     *
-     * @return void
-     */
-    public function scopeBetweenDates($query, $from, $to)
+    public function address()
     {
-        $query->where('to', '>=', $from)->where('from', '<=', $to);
+        return $this->belongsTo(Address::class);
     }
 
-    public static function findByReviewKey(string $reviewKey) : ?Booking # return Booking or null
+    public function scopeBetweenDates(Builder $query, $from, $to)
+    {
+        return $query->where('to', '>=', $from)
+                    ->where('from', '<=', $to);
+    }
+
+    public static function findByReviewKey(string $reviewKey): ?Booking
     {
         return static::where('review_key', $reviewKey)->with('bookable')->get()->first();
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($booking){
+            $booking->review_key = Str::uuid();
+        });
     }
 }

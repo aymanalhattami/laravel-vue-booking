@@ -1,11 +1,11 @@
-export const is404 = function(err){
-    return isErrorWithReponseAndStatus(err) && 404 === err.response.status    
-}
+export const is404 =  function(err){
+    return isErrorWithResponseStatus(err) && err.response.status == 404
+};
 
-export const is422 = function(err){
-    return isErrorWithReponseAndStatus(err) && 422 === err.response.status;
-}
+export const is422 = function (err) {
+    return isErrorWithResponseStatus(err) && err.response.status == 422
+};
 
-const isErrorWithReponseAndStatus = function(err){
+const isErrorWithResponseStatus = function(err){
     return err.response && err.response.status;
 }

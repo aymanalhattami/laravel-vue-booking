@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Review;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ReviewResource;
 use App\Models\Booking;
+use App\Models\Review;
+use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function show($id)
-    {
+    public function show($id){
         return new ReviewResource(Review::findOrFail($id));
     }
 
@@ -25,8 +24,8 @@ class ReviewController extends Controller
 
         $booking = Booking::findByReviewKey($data['id']);
 
-        if(null === $booking){
-            abort(404);
+        if($booking === null) {
+            return abort(404);
         }
 
         $booking->review_key = '';

@@ -7,8 +7,8 @@
 </template>
 
 <style scoped>
-.error{
-    color: #999;
-    font-size: 10rem;
-}
+    .error{
+        color: #999;
+        font-size: 10rem;
+    }
 </style>
